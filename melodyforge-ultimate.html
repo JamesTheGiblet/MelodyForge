@@ -536,6 +536,14 @@
             background: linear-gradient(45deg, #e67e22, #d35400);
         }
 
+        .share-button {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+        }
+
+        .share-button:hover:not(:disabled) {
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+        }
+
         .fitness-metric-fill {
             width: 0%;
         }
@@ -592,6 +600,71 @@
             .logo-icon {
                 font-size: 2em;
             }
+        }
+
+        /* Print styles */
+        @media print {
+            .music-controls,
+            .evolution-controls,
+            .rating-controls {
+                display: none;
+            }
+            
+            .genome-info,
+            .saved-genomes {
+                break-inside: avoid;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .visualizer-bar {
+                background: white;
+            }
+            
+            .control-group {
+                border: 2px solid white;
+            }
+        }
+
+        /* Dark mode consistency */
+        @media (prefers-color-scheme: dark) {
+            /* Your existing dark theme is perfect */
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #4ecdc4;
+            border-radius: 50%;
+            border-right-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -718,6 +791,13 @@
             <button id="skipButton" class="secondary">👎 Skip</button>
             <button id="evolveButton" class="evolve-button">⚡ Evolve</button>
             <button id="exportMidiBtn" class="export-midi-button">🎼 Export MIDI</button>
+        </div>
+        
+        <div class="rating-controls">
+            <button id="shareButton" class="share-button">🔗 Share</button>
+            <button id="enhancedMidiBtn" class="export-midi-button">🎵 Enhanced MIDI</button>
+            <button id="copyGenomeBtn" class="secondary">📋 Copy Genome</button>
+            <button id="randomizeBtn">🎲 Randomize</button>
         </div>
 
         <div class="stats">
@@ -855,14 +935,23 @@
                 };
                 
                 this.cacheDOM();
-                this.setupAudio();
+                this.setupAudioWithFallback();
                 this.setupVisualizer();
                 this.setupWaveformAnalyzer(); // Setup canvas even if audio not ready
                 this.initializePopulation();
+                
+                // Add debounced UI updates for better performance
+                this.updateUI = this.debounce(this.updateUI.bind(this), 100);
                 this.updateUI();
                 this.updateLayerIndicator();
                 this.animateVisualizer();
                 this.setupEventListeners();
+                
+                // Initialize enhanced features
+                this.registerServiceWorker();
+                
+                // Check for shared genomes in URL
+                this.loadSharedGenome();
                 
                 this.showNotification('🎵 Welcome to MelodyForge! Click to enable audio.');
             }
@@ -945,6 +1034,25 @@
                 // Defer audio setup until after user interaction to prevent warnings
                 this.audioInitialized = false;
                 this.setupAudioEnable();
+            }
+            
+            // Enhanced error handling and recovery
+            setupAudioWithFallback() {
+                try {
+                    this.setupAudio();
+                } catch (error) {
+                    console.warn('Primary audio setup failed, using fallback:', error);
+                    this.setupBasicAudio();
+                    this.showNotification('Using basic audio mode', 'warning');
+                }
+            }
+
+            setupBasicAudio() {
+                // Simplified audio setup for maximum compatibility
+                this.melodySynth = new Tone.Synth().toDestination();
+                this.bassSynth = new Tone.Synth().toDestination();
+                this.chordSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+                this.audioInitialized = true;
             }
             
             initializeAudioContext() {
@@ -1057,6 +1165,155 @@
                 
                 const visualizerContainer = document.getElementById('visualizer');
                 this.visualizerBars.forEach(bar => visualizerContainer.appendChild(bar));
+            }
+            
+            // Performance optimization
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            // Add analytics for user behavior tracking (optional)
+            trackUserAction(action, data = {}) {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', action, data);
+                }
+                // Custom analytics
+                console.log('User action:', action, data);
+            }
+
+            // Enhanced genome sharing
+            generateShareableLink() {
+                const genomeData = {
+                    traits: this.currentGenome?.musicalTraits,
+                    generation: this.generation,
+                    timestamp: Date.now()
+                };
+                
+                const compressed = btoa(JSON.stringify(genomeData));
+                return `${window.location.origin}${window.location.pathname}?share=${compressed}`;
+            }
+
+            // Enhanced MIDI export with format options
+            exportMIDIWithFormat() {
+                if (!this.currentGenome) {
+                    this.showNotification('⚠️ No genome to export');
+                    return;
+                }
+
+                // Check for Web MIDI API support
+                if (navigator.requestMIDIAccess) {
+                    navigator.requestMIDIAccess()
+                        .then(() => {
+                            this.trackUserAction('enhanced_midi_export', { 
+                                webMidiSupported: true,
+                                generation: this.generation 
+                            });
+                            this.exportMIDIFile(true); // Enhanced format
+                        })
+                        .catch(() => {
+                            this.exportMIDIFile(false); // Basic format
+                        });
+                } else {
+                    this.exportMIDIFile(false); // Basic format
+                }
+            }
+
+            // Copy genome data to clipboard
+            copyGenomeToClipboard() {
+                if (!this.currentGenome) {
+                    this.showNotification('⚠️ No genome to copy');
+                    return;
+                }
+
+                const genomeData = {
+                    melody: this.currentGenome.melody,
+                    bass: this.currentGenome.bass,
+                    chords: this.currentGenome.chords,
+                    fitness: this.currentGenome.fitness,
+                    generation: this.generation
+                };
+
+                navigator.clipboard.writeText(JSON.stringify(genomeData, null, 2))
+                    .then(() => {
+                        this.showNotification('📋 Genome copied to clipboard!');
+                        this.trackUserAction('genome_copy', { generation: this.generation });
+                    })
+                    .catch(() => {
+                        this.showNotification('❌ Failed to copy genome');
+                    });
+            }
+
+            // Randomize musical parameters
+            randomizeParameters() {
+                // Randomize sliders
+                const sliders = ['tempo', 'complexity', 'harmony', 'rhythm'];
+                sliders.forEach(sliderId => {
+                    const slider = document.getElementById(sliderId);
+                    if (slider) {
+                        const min = parseInt(slider.min);
+                        const max = parseInt(slider.max);
+                        const randomValue = Math.floor(Math.random() * (max - min + 1)) + min;
+                        slider.value = randomValue;
+                        
+                        // Trigger the input event to update the display
+                        slider.dispatchEvent(new Event('input'));
+                    }
+                });
+
+                // Randomize environment
+                const environments = ['forest', 'cave', 'ocean', 'space', 'desert'];
+                const randomEnv = environments[Math.floor(Math.random() * environments.length)];
+                document.getElementById('environment').value = randomEnv;
+                document.getElementById('environment').dispatchEvent(new Event('change'));
+
+                this.showNotification('🎲 Parameters randomized!');
+                this.trackUserAction('parameters_randomized');
+            }
+
+            // Add service worker for offline functionality (optional)
+            registerServiceWorker() {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => console.log('SW registered'))
+                        .catch(error => console.log('SW registration failed'));
+                }
+            }
+
+            // Load shared genome from URL parameter
+            loadSharedGenome() {
+                try {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const sharedData = urlParams.get('share');
+                    
+                    if (sharedData) {
+                        const genomeData = JSON.parse(atob(sharedData));
+                        
+                        if (genomeData.traits) {
+                            // Create a genome from shared data
+                            const sharedGenome = {
+                                musicalTraits: genomeData.traits,
+                                fitness: 0,
+                                fitnessBreakdown: { melodic: 0, harmonic: 0, rhythmic: 0 },
+                                age: 0
+                            };
+                            
+                            this.currentGenome = sharedGenome;
+                            this.updateGenomeDisplay();
+                            this.showNotification('🔗 Shared genome loaded successfully!', 'success');
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Failed to load shared genome:', error);
+                    this.showNotification('❌ Invalid shared link', 'error');
+                }
             }
             
             setupWaveformAnalyzer() {
@@ -1481,6 +1738,23 @@
                 document.getElementById('catchinessBtn').addEventListener('click', () => {
                     this.setFitnessFunction('catchy');
                 });
+
+                // New advanced feature buttons
+                document.getElementById('shareBtn').addEventListener('click', () => {
+                    this.generateShareableLink();
+                });
+
+                document.getElementById('enhancedExportBtn').addEventListener('click', () => {
+                    this.exportMIDIWithFormat();
+                });
+
+                document.getElementById('copyGenomeBtn').addEventListener('click', () => {
+                    this.copyGenomeToClipboard();
+                });
+
+                document.getElementById('randomizeBtn').addEventListener('click', () => {
+                    this.randomizeParameters();
+                });
             }
             
             toggleLayer(layerName) {
@@ -1534,7 +1808,7 @@
                         
                     case 'bass':
                         for (let i = 0; i < 16; i++) {
-                            const time = i * 1.0;
+                            const time = i * 2.0;
                             if (time > currentTime) {
                                 const bassNote = this.generateBassNote(traits, i);
                                 if (bassNote) {
@@ -1551,7 +1825,7 @@
                         
                     case 'chords':
                         for (let i = 0; i < 8; i++) {
-                            const time = i * 2.0;
+                            const time = i * 4.0;
                             if (time > currentTime) {
                                 const chord = this.generateChord(traits, i);
                                 if (chord && chord.length > 0) {
@@ -1700,9 +1974,24 @@
                     chords: []
                 };
                 this.playbackTimeout = null;
+                this.timelineInterval = null;
+                
+                // Check if any layers are active
+                const hasActiveLayers = this.layers.melody || this.layers.bass || this.layers.chords;
+                if (!hasActiveLayers) {
+                    this.showNotification('🔇 All layers disabled - playing silence', 'warning');
+                }
                 
                 // Simple melody generation based on current genome
                 this.generateAndPlayMusic();
+                
+                // Start timeline updates (update every 100ms for smooth progress)
+                this.timelineInterval = setInterval(() => {
+                    this.updateTimelineDisplay();
+                }, 100);
+                
+                // Initial timeline display
+                this.updateTimelineDisplay();
                 
                 // Stop after duration
                 this.playbackTimeout = setTimeout(() => {
@@ -1728,6 +2017,12 @@
                     
                     // Cancel all scheduled events
                     this.clearScheduledEvents();
+                }
+                
+                // Clear timeline update interval
+                if (this.timelineInterval) {
+                    clearInterval(this.timelineInterval);
+                    this.timelineInterval = null;
                 }
                 
                 // Reset timeline display
@@ -1924,6 +2219,13 @@
             
             rateCurrentGenome(rating) {
                 if (!this.currentGenome) return;
+
+                // Track user interaction
+                this.trackUserAction('genome_rating', {
+                    rating: rating,
+                    generation: this.generation,
+                    fitness: this.currentGenome.fitness
+                });
                 
                 if (rating === 'like') {
                     this.currentGenome.fitness += 0.1;
@@ -2395,6 +2697,23 @@
                 } catch (error) {
                     console.error('MIDI export error:', error);
                     this.showNotification("❌ MIDI export failed!");
+                }
+            }
+
+            // Enhanced MIDI export with proper format
+            async exportAsStandardMIDI() {
+                try {
+                    // Use Web MIDI API if available
+                    if (navigator.requestMIDIAccess) {
+                        const midiAccess = await navigator.requestMIDIAccess();
+                        this.showNotification('MIDI hardware detected', 'success');
+                    }
+                    
+                    // Your existing MIDI export logic
+                    this.exportCurrentGenomeAsMIDI();
+                } catch (error) {
+                    console.warn('Web MIDI not available:', error);
+                    this.exportCurrentGenomeAsMIDI(); // Fallback to JSON export
                 }
             }
             
