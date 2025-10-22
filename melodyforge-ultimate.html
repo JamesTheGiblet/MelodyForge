@@ -31,6 +31,7 @@
             max-width: 1200px;
             width: 100%;
             background: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
@@ -515,6 +516,52 @@
             transform: translateY(-2px);
         }
 
+        .layer-icon {
+            font-size: 1.5em;
+        }
+
+        .button-group-spaced {
+            margin-top: 15px;
+        }
+
+        .button-small {
+            font-size: 0.9em;
+        }
+
+        .evolve-button {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+        }
+
+        .export-midi-button {
+            background: linear-gradient(45deg, #e67e22, #d35400);
+        }
+
+        .fitness-metric-fill {
+            width: 0%;
+        }
+
+        .empty-state {
+            opacity: 0.5;
+            text-align: center;
+        }
+
+        .copyright {
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
         @media (max-width: 1024px) {
             .evolution-controls {
                 grid-template-columns: 1fr;
@@ -575,15 +622,15 @@
 
         <div class="audio-layers">
             <div class="layer-toggle active" id="melodyToggle">
-                <div style="font-size: 1.5em;">🎹</div>
+                <div class="layer-icon">🎹</div>
                 <div>Melody</div>
             </div>
             <div class="layer-toggle active" id="bassToggle">
-                <div style="font-size: 1.5em;">🎸</div>
+                <div class="layer-icon">🎸</div>
                 <div>Bass Line</div>
             </div>
             <div class="layer-toggle active" id="chordsToggle">
-                <div style="font-size: 1.5em;">🎼</div>
+                <div class="layer-icon">🎼</div>
                 <div>Chords</div>
             </div>
         </div>
@@ -604,7 +651,8 @@
                     <button id="pauseBtn" class="secondary">Pause</button>
                     <button id="resetBtn">Reset</button>
                 </div>
-                <select id="environmentSelect">
+                <label for="environmentSelect" class="sr-only">Musical Environment</label>
+                <select id="environmentSelect" title="Select Musical Environment">
                     <option value="ambient">Ambient</option>
                     <option value="dance">Dance</option>
                     <option value="jazz">Jazz</option>
@@ -619,48 +667,48 @@
             <div class="control-group">
                 <h2>🎛️ Musical Parameters</h2>
                 <div class="slider-control">
-                    <label>
+                    <label for="melodicComplexity">
                         Melodic Complexity:
                         <span id="melodicValue">5</span>
                     </label>
-                    <input type="range" id="melodicComplexity" min="1" max="10" value="5">
+                    <input type="range" id="melodicComplexity" min="1" max="10" value="5" title="Adjust melodic complexity from 1 to 10">
                 </div>
                 <div class="slider-control">
-                    <label>
+                    <label for="harmonicDensity">
                         Harmonic Density:
                         <span id="harmonicValue">5</span>
                     </label>
-                    <input type="range" id="harmonicDensity" min="1" max="10" value="5">
+                    <input type="range" id="harmonicDensity" min="1" max="10" value="5" title="Adjust harmonic density from 1 to 10">
                 </div>
                 <div class="slider-control">
-                    <label>
+                    <label for="mutationRate">
                         Mutation Rate:
                         <span id="mutationValue">10%</span>
                     </label>
-                    <input type="range" id="mutationRate" min="0.01" max="0.5" step="0.01" value="0.1">
+                    <input type="range" id="mutationRate" min="0.01" max="0.5" step="0.01" value="0.1" title="Adjust mutation rate from 1% to 50%">
                 </div>
             </div>
 
             <div class="control-group">
                 <h2>🔊 Audio Effects</h2>
                 <div class="slider-control">
-                    <label>
+                    <label for="reverbAmount">
                         Reverb Amount:
                         <span id="reverbValue">30%</span>
                     </label>
-                    <input type="range" id="reverbAmount" min="0" max="100" value="30">
+                    <input type="range" id="reverbAmount" min="0" max="100" value="30" title="Adjust reverb amount from 0% to 100%">
                 </div>
                 <div class="slider-control">
-                    <label>
+                    <label for="tempoControl">
                         Tempo Control:
                         <span id="tempoValue">120 BPM</span>
                     </label>
-                    <input type="range" id="tempoControl" min="60" max="180" value="120">
+                    <input type="range" id="tempoControl" min="60" max="180" value="120" title="Adjust tempo from 60 to 180 BPM">
                 </div>
-                <div class="button-group" style="margin-top: 15px;">
-                    <button id="harmonyBtn" class="active" style="font-size: 0.9em;">Harmony</button>
-                    <button id="rhythmBtn" style="font-size: 0.9em;">Rhythm</button>
-                    <button id="catchinessBtn" style="font-size: 0.9em;">Catchy</button>
+                <div class="button-group button-group-spaced">
+                    <button id="harmonyBtn" class="active button-small">Harmony</button>
+                    <button id="rhythmBtn" class="button-small">Rhythm</button>
+                    <button id="catchinessBtn" class="button-small">Catchy</button>
                 </div>
             </div>
         </div>
@@ -668,8 +716,8 @@
         <div class="rating-controls">
             <button id="likeButton">👍 Like</button>
             <button id="skipButton" class="secondary">👎 Skip</button>
-            <button id="evolveButton" style="background: linear-gradient(45deg, #9b59b6, #8e44ad);">⚡ Evolve</button>
-            <button id="exportMidiBtn" style="background: linear-gradient(45deg, #e67e22, #d35400);">🎼 Export MIDI</button>
+            <button id="evolveButton" class="evolve-button">⚡ Evolve</button>
+            <button id="exportMidiBtn" class="export-midi-button">🎼 Export MIDI</button>
         </div>
 
         <div class="stats">
@@ -702,25 +750,25 @@
                 <div class="fitness-metric">
                     <div class="fitness-metric-label">Melodic Interest</div>
                     <div class="fitness-metric-bar">
-                        <div class="fitness-metric-fill" id="melodicBar" style="width: 0%;"></div>
+                        <div class="fitness-metric-fill" id="melodicBar"></div>
                     </div>
                 </div>
                 <div class="fitness-metric">
                     <div class="fitness-metric-label">Harmonic Consonance</div>
                     <div class="fitness-metric-bar">
-                        <div class="fitness-metric-fill" id="harmonicBar" style="width: 0%;"></div>
+                        <div class="fitness-metric-fill" id="harmonicBar"></div>
                     </div>
                 </div>
                 <div class="fitness-metric">
                     <div class="fitness-metric-label">Rhythmic Stability</div>
                     <div class="fitness-metric-bar">
-                        <div class="fitness-metric-fill" id="rhythmicBar" style="width: 0%;"></div>
+                        <div class="fitness-metric-fill" id="rhythmicBar"></div>
                     </div>
                 </div>
                 <div class="fitness-metric">
                     <div class="fitness-metric-label">Overall Fitness</div>
                     <div class="fitness-metric-bar">
-                        <div class="fitness-metric-fill" id="overallBar" style="width: 0%;"></div>
+                        <div class="fitness-metric-fill" id="overallBar"></div>
                     </div>
                 </div>
             </div>
@@ -738,7 +786,7 @@
             <div class="saved-genomes">
                 <h2>📚 Saved Genomes</h2>
                 <div id="savedGenomesList">
-                    <p style="opacity: 0.5; text-align: center;">No saved genomes yet</p>
+                    <p class="empty-state">No saved genomes yet</p>
                 </div>
             </div>
         </div>
@@ -750,7 +798,7 @@
                 <a href="#" onclick="alert('How to Use MelodyForge:\\n\\n1. Click to enable audio\\n2. Press Play to hear music\\n3. Start Evolution to begin\\n4. Like/Skip to guide evolution\\n5. Save your favorites\\n6. Export as MIDI'); return false;">Help</a>
                 <a href="#" onclick="alert('Created with ❤️ using:\\n• Tone.js (Web Audio)\\n• Genetic Algorithms\\n• Music Theory\\n• JavaScript ES6+'); return false;">Credits</a>
             </div>
-            <p style="margin-top: 10px; font-size: 0.85em;">© 2025 MelodyForge. Forge your sound.</p>
+            <p class="copyright">© 2025 MelodyForge. Forge your sound.</p>
         </footer>
     </div>
 
@@ -775,6 +823,30 @@
                 this.currentBass = null;
                 this.currentChords = null;
                 this.evolutionStartTime = 0;
+                this.scheduledEvents = {
+                    melody: [],
+                    bass: [],
+                    chords: []
+                };
+                this.playbackTimeout = null;
+                
+                // Musical parameters from UI controls
+                this.musicalParameters = {
+                    melodicComplexity: 5,
+                    harmonicDensity: 5,
+                    mutationRate: 0.1
+                };
+                
+                // Audio effects settings
+                this.audioEffects = {
+                    reverbAmount: 30,
+                    tempoControl: 120
+                };
+                
+                // Evolution settings
+                this.evolutionSettings = {
+                    environment: 'ambient'
+                };
                 
                 this.layers = {
                     melody: true,
@@ -785,13 +857,64 @@
                 this.cacheDOM();
                 this.setupAudio();
                 this.setupVisualizer();
-                this.setupWaveformAnalyzer();
+                this.setupWaveformAnalyzer(); // Setup canvas even if audio not ready
                 this.initializePopulation();
                 this.updateUI();
+                this.updateLayerIndicator();
                 this.animateVisualizer();
                 this.setupEventListeners();
                 
                 this.showNotification('🎵 Welcome to MelodyForge! Click to enable audio.');
+            }
+            
+            updateCurrentGenomeWithParameters() {
+                if (!this.currentGenome) return;
+                
+                // Update current genome to reflect new parameter settings
+                const traits = this.currentGenome.musicalTraits;
+                
+                // Adjust melodic complexity
+                const complexityFactor = this.musicalParameters.melodicComplexity / 5; // Normalize to 0-2 range
+                traits.melodyShape = Math.min(1, traits.melodyShape * complexityFactor);
+                traits.melodicContour = Math.min(1, traits.melodicContour * complexityFactor);
+                
+                // Adjust harmonic density
+                const densityFactor = this.musicalParameters.harmonicDensity / 5; // Normalize to 0-2 range
+                traits.harmonyComplexity = Math.min(1, traits.harmonyComplexity * densityFactor);
+                traits.voiceLeading = Math.min(1, traits.voiceLeading * densityFactor);
+                
+                // Recalculate fitness with new parameters
+                this.currentGenome.fitness = this.calculateFitness(this.currentGenome);
+                this.updateGenomeDisplay();
+                
+                // If currently playing, restart with new parameters
+                if (this.isPlaying) {
+                    this.stopPlayback();
+                    setTimeout(() => this.startPlayback(), 100);
+                }
+            }
+            
+            setFitnessFunction(type) {
+                // Remove active class from all buttons
+                document.getElementById('harmonyBtn').classList.remove('active');
+                document.getElementById('rhythmBtn').classList.remove('active');
+                document.getElementById('catchinessBtn').classList.remove('active');
+                
+                // Add active class to selected button
+                document.getElementById(type + 'Btn').classList.add('active');
+                
+                // Update fitness function
+                this.fitnessFunction = type;
+                
+                // Recalculate fitness for all genomes with new function
+                if (this.population && this.population.length > 0) {
+                    this.population.forEach(genome => {
+                        genome.fitness = this.calculateFitness(genome);
+                    });
+                    this.selectBestGenome();
+                }
+                
+                this.showNotification(`🎯 Fitness focus changed to ${type}`);
             }
             
             cacheDOM() {
@@ -812,12 +935,21 @@
                     pauseBtn: document.getElementById('pauseBtn'),
                     resetBtn: document.getElementById('resetBtn'),
                     timelineProgress: document.getElementById('timelineProgress'),
+                    timeDisplay: document.getElementById('timeDisplay'),
                     evolutionProgress: document.getElementById('evolutionProgress'),
                     notification: document.getElementById('notification')
                 };
             }
             
             setupAudio() {
+                // Defer audio setup until after user interaction to prevent warnings
+                this.audioInitialized = false;
+                this.setupAudioEnable();
+            }
+            
+            initializeAudioContext() {
+                if (this.audioInitialized) return;
+                
                 try {
                     this.reverb = new Tone.Reverb({
                         decay: 2.5,
@@ -882,9 +1014,14 @@
                     }).connect(this.chorus);
 
                     Tone.Transport.bpm.value = 120;
-                    this.setupAudioEnable();
+                    
+                    // Setup waveform analyzer after audio context is ready
+                    this.setupWaveformAnalyzer();
+                    
+                    this.audioInitialized = true;
+                    console.log('Audio context initialized successfully');
                 } catch (error) {
-                    console.error('Error setting up audio:', error);
+                    console.error('Error initializing audio context:', error);
                     this.showNotification('Audio setup failed. Please refresh the page.', 'error');
                 }
             }
@@ -892,6 +1029,9 @@
             setupAudioEnable() {
                 const enableAudio = () => {
                     if (!this.audioEnabled) {
+                        // Initialize audio context first, then start Tone
+                        this.initializeAudioContext();
+                        
                         Tone.start().then(() => {
                             this.audioEnabled = true;
                             document.getElementById('audioWarning').style.display = 'none';
@@ -920,14 +1060,24 @@
             }
             
             setupWaveformAnalyzer() {
-                this.analyser = new Tone.Analyser('waveform', 256);
-                this.melodySynth.connect(this.analyser);
-                this.canvas = document.getElementById('waveformCanvas');
-                this.canvasCtx = this.canvas.getContext('2d');
+                try {
+                    this.canvas = document.getElementById('waveformCanvas');
+                    this.canvasCtx = this.canvas.getContext('2d');
+                    
+                    // Only create analyzer if audio is initialized
+                    if (this.audioInitialized && this.melodySynth) {
+                        this.analyser = new Tone.Analyser('waveform', 256);
+                        this.melodySynth.connect(this.analyser);
+                    }
+                } catch (error) {
+                    console.warn('Waveform analyzer setup failed:', error);
+                }
             }
             
             drawWaveform() {
-                if (!this.isPlaying) {
+                if (!this.canvas || !this.canvasCtx) return;
+                
+                if (!this.isPlaying || !this.analyser) {
                     this.canvasCtx.fillStyle = '#0f3460';
                     this.canvasCtx.fillRect(0, 0, this.canvas.width, this.canvas.height);
                     
@@ -1008,6 +1158,151 @@
                 return progressions[Math.floor(Math.random() * progressions.length)];
             }
             
+            selectBestGenome() {
+                if (this.population && this.population.length > 0) {
+                    // Calculate fitness for all genomes
+                    this.population.forEach(genome => {
+                        genome.fitness = this.calculateFitness(genome);
+                    });
+                    
+                    // Sort by fitness and select the best
+                    this.population.sort((a, b) => b.fitness - a.fitness);
+                    this.currentGenome = this.population[0];
+                    
+                    // Update UI with current genome info
+                    this.updateGenomeDisplay();
+                } else {
+                    // Fallback: create a default genome if population is empty
+                    this.currentGenome = this.createRandomGenome();
+                    this.currentGenome.fitness = this.calculateFitness(this.currentGenome);
+                }
+            }
+            
+            calculateFitness(genome) {
+                const traits = genome.musicalTraits;
+                let fitness = 0;
+                
+                // Melodic fitness
+                const melodicFitness = (
+                    traits.melodyShape * 0.3 +
+                    traits.melodicContour * 0.3 +
+                    traits.motifRepetition * 0.4
+                );
+                
+                // Harmonic fitness
+                const harmonicFitness = (
+                    traits.harmonyComplexity * 0.4 +
+                    traits.voiceLeading * 0.3 +
+                    (1 - Math.abs(traits.tension - 0.5)) * 0.3
+                );
+                
+                // Rhythmic fitness
+                const rhythmicFitness = (
+                    traits.rhythmDensity * 0.4 +
+                    traits.syncopation * 0.3 +
+                    traits.swingFactor * 0.3
+                );
+                
+                // Apply fitness function focus first
+                let fitnessBase;
+                switch (this.fitnessFunction) {
+                    case 'harmony':
+                        fitnessBase = harmonicFitness * 0.6 + melodicFitness * 0.3 + rhythmicFitness * 0.1;
+                        break;
+                    case 'rhythm':
+                        fitnessBase = rhythmicFitness * 0.6 + melodicFitness * 0.2 + harmonicFitness * 0.2;
+                        break;
+                    case 'catchy':
+                        // Catchy focuses on melodic interest and motif repetition
+                        const catchyFactor = (traits.melodyShape + traits.motifRepetition) / 2;
+                        fitnessBase = catchyFactor * 0.5 + melodicFitness * 0.3 + rhythmicFitness * 0.2;
+                        break;
+                    default:
+                        fitnessBase = (melodicFitness + harmonicFitness + rhythmicFitness) / 3;
+                }
+                
+                // Environment-based adjustments (secondary influence)
+                let environmentModifier = 1.0;
+                switch (this.environment) {
+                    case 'ambient':
+                        environmentModifier = 0.8 + (harmonicFitness * 0.4);
+                        break;
+                    case 'dance':
+                        environmentModifier = 0.8 + (rhythmicFitness * 0.4);
+                        break;
+                    case 'jazz':
+                        environmentModifier = 0.8 + ((harmonicFitness + melodicFitness) * 0.2);
+                        break;
+                    case 'classical':
+                        environmentModifier = 0.8 + (harmonicFitness * 0.3) + (melodicFitness * 0.1);
+                        break;
+                    case 'electronic':
+                        environmentModifier = 0.8 + (rhythmicFitness * 0.3) + (traits.syncopation * 0.1);
+                        break;
+                    case 'lofi':
+                        environmentModifier = 0.9 + (harmonicFitness * 0.1);
+                        break;
+                    case 'experimental':
+                        environmentModifier = 0.7 + (Math.random() * 0.6); // Add some randomness
+                        break;
+                    default:
+                        environmentModifier = 1.0;
+                }
+                
+                fitness = fitnessBase * environmentModifier;
+                
+                // Store breakdown for UI display
+                genome.fitnessBreakdown = {
+                    melodic: melodicFitness,
+                    harmonic: harmonicFitness,
+                    rhythmic: rhythmicFitness
+                };
+                
+                return Math.max(0, Math.min(1, fitness));
+            }
+            
+            updateGenomeDisplay() {
+                if (!this.currentGenome) return;
+                
+                const traits = this.currentGenome.musicalTraits;
+                const scaleNames = ['major', 'minor', 'dorian', 'mixolydian', 'pentatonic', 'blues', 'harmonic_minor'];
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                
+                // Update genome info display
+                if (this.dom.scaleInfo) {
+                    const scaleName = scaleNames[scaleNames.indexOf(traits.scaleType)] || traits.scaleType;
+                    const rootNote = noteNames[traits.rootNote] || 'C';
+                    this.dom.scaleInfo.textContent = `${rootNote} ${scaleName}`;
+                }
+                
+                if (this.dom.tempoInfo) {
+                    this.dom.tempoInfo.textContent = `${Math.round(traits.tempo)} BPM`;
+                }
+                
+                if (this.dom.patternInfo) {
+                    const pattern = traits.melodyShape > 0.7 ? 'Complex' : 
+                                   traits.melodyShape > 0.4 ? 'Moderate' : 'Simple';
+                    this.dom.patternInfo.textContent = pattern;
+                }
+                
+                // Update fitness bars
+                const breakdown = this.currentGenome.fitnessBreakdown;
+                if (breakdown) {
+                    if (this.dom.melodicBar) {
+                        this.dom.melodicBar.style.width = `${breakdown.melodic * 100}%`;
+                    }
+                    if (this.dom.harmonicBar) {
+                        this.dom.harmonicBar.style.width = `${breakdown.harmonic * 100}%`;
+                    }
+                    if (this.dom.rhythmicBar) {
+                        this.dom.rhythmicBar.style.width = `${breakdown.rhythmic * 100}%`;
+                    }
+                    if (this.dom.overallBar) {
+                        this.dom.overallBar.style.width = `${this.currentGenome.fitness * 100}%`;
+                    }
+                }
+            }
+            
             showNotification(message, type = 'success') {
                 const notification = this.dom.notification;
                 notification.textContent = message;
@@ -1030,16 +1325,699 @@
             
             // Additional methods follow the same pattern as Pro Edition...
             setupEventListeners() {
+                // Start Evolution
                 document.getElementById('startBtn').addEventListener('click', () => {
                     if (!this.audioEnabled) {
-                        Tone.start();
-                        this.audioEnabled = true;
-                        document.getElementById('audioWarning').style.display = 'none';
+                        this.initializeAudioContext();
+                        Tone.start().then(() => {
+                            this.audioEnabled = true;
+                            document.getElementById('audioWarning').style.display = 'none';
+                            this.startEvolution();
+                        });
+                    } else {
+                        this.startEvolution();
                     }
-                    this.startEvolution();
                 });
                 
-                // ... rest of event listeners ...
+                // Pause Evolution
+                document.getElementById('pauseBtn').addEventListener('click', () => {
+                    this.pauseEvolution();
+                });
+                
+                // Reset Evolution
+                document.getElementById('resetBtn').addEventListener('click', () => {
+                    this.resetEvolution();
+                });
+                
+                // Play/Pause Button
+                document.getElementById('playButton').addEventListener('click', () => {
+                    if (!this.audioEnabled) {
+                        this.showNotification('Please click anywhere to enable audio first!', 'warning');
+                        return;
+                    }
+                    this.togglePlayback();
+                });
+                
+                // Environment Selection
+                document.getElementById('environmentSelect').addEventListener('change', (e) => {
+                    this.environment = e.target.value;
+                    this.evolutionSettings.environment = e.target.value;
+                    
+                    // Recalculate fitness for all genomes with new environment
+                    if (this.population && this.population.length > 0) {
+                        this.population.forEach(genome => {
+                            genome.fitness = this.calculateFitness(genome);
+                        });
+                        this.selectBestGenome();
+                    }
+                    
+                    this.showNotification(`🌍 Environment changed to ${e.target.value}`);
+                });
+                
+                // Slider Controls
+                document.getElementById('melodicComplexity').addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    document.getElementById('melodicValue').textContent = value;
+                    this.musicalParameters.melodicComplexity = value;
+                    this.updateCurrentGenomeWithParameters();
+                    this.showNotification(`Melodic complexity set to ${value}`);
+                });
+                
+                document.getElementById('harmonicDensity').addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    document.getElementById('harmonicValue').textContent = value;
+                    this.musicalParameters.harmonicDensity = value;
+                    this.updateCurrentGenomeWithParameters();
+                    this.showNotification(`Harmonic density set to ${value}`);
+                });
+                
+                document.getElementById('mutationRate').addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    const percentage = Math.round(value * 100);
+                    document.getElementById('mutationValue').textContent = `${percentage}%`;
+                    this.musicalParameters.mutationRate = value;
+                    this.showNotification(`Mutation rate set to ${percentage}%`);
+                });
+                
+                document.getElementById('reverbAmount').addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    document.getElementById('reverbValue').textContent = `${value}%`;
+                    this.audioEffects.reverbAmount = value;
+                    
+                    if (this.reverb) {
+                        this.reverb.wet.value = value / 100;
+                        this.reverb.decay = 1 + (value / 100) * 3; // Scale decay from 1-4 seconds
+                    }
+                    
+                    this.showNotification(`🔊 Reverb set to ${value}%`);
+                });
+                
+                document.getElementById('tempoControl').addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    document.getElementById('tempoValue').textContent = `${value} BPM`;
+                    this.audioEffects.tempoControl = value;
+                    
+                    if (this.audioEnabled) {
+                        Tone.Transport.bpm.value = value;
+                        
+                        // Update current genome tempo if one exists
+                        if (this.currentGenome) {
+                            this.currentGenome.musicalTraits.tempo = value;
+                            this.updateGenomeDisplay();
+                        }
+                        
+                        // If currently playing, the tempo change will take effect immediately
+                        if (this.isPlaying) {
+                            this.showNotification(`🎵 Tempo changed to ${value} BPM`);
+                        }
+                    }
+                });
+                
+                // Rating buttons
+                document.getElementById('likeButton').addEventListener('click', () => {
+                    this.rateCurrentGenome('like');
+                });
+                
+                document.getElementById('skipButton').addEventListener('click', () => {
+                    this.rateCurrentGenome('skip');
+                });
+                
+                document.getElementById('evolveButton').addEventListener('click', () => {
+                    this.evolvePopulation();
+                });
+                
+                // Save/Load functionality
+                document.getElementById('saveBtn').addEventListener('click', () => {
+                    this.saveCurrentGenome();
+                });
+                
+                // Export MIDI functionality
+                document.getElementById('exportMidiBtn').addEventListener('click', () => {
+                    this.exportCurrentGenomeAsMIDI();
+                });
+                
+                // Layer toggles
+                document.getElementById('melodyToggle').addEventListener('click', () => {
+                    this.toggleLayer('melody');
+                });
+                
+                document.getElementById('bassToggle').addEventListener('click', () => {
+                    this.toggleLayer('bass');
+                });
+                
+                document.getElementById('chordsToggle').addEventListener('click', () => {
+                    this.toggleLayer('chords');
+                });
+                
+                // Audio Effects Buttons
+                document.getElementById('harmonyBtn').addEventListener('click', () => {
+                    this.setFitnessFunction('harmony');
+                });
+                
+                document.getElementById('rhythmBtn').addEventListener('click', () => {
+                    this.setFitnessFunction('rhythm');
+                });
+                
+                document.getElementById('catchinessBtn').addEventListener('click', () => {
+                    this.setFitnessFunction('catchy');
+                });
+            }
+            
+            toggleLayer(layerName) {
+                this.layers[layerName] = !this.layers[layerName];
+                const toggle = document.getElementById(layerName + 'Toggle');
+                
+                if (this.layers[layerName]) {
+                    toggle.classList.add('active');
+                    
+                    // If layer is enabled and we're currently playing, add the new layer
+                    if (this.isPlaying && this.audioEnabled) {
+                        this.addLayerToCurrentPlayback(layerName);
+                    }
+                } else {
+                    toggle.classList.remove('active');
+                    
+                    // If layer is disabled and we're currently playing, stop that layer immediately
+                    if (this.isPlaying && this.audioEnabled) {
+                        this.stopLayerAudio(layerName);
+                    }
+                }
+                
+                this.updateLayerIndicator();
+                this.showNotification(`${layerName} ${this.layers[layerName] ? 'enabled' : 'disabled'}`);
+            }
+            
+            addLayerToCurrentPlayback(layerName) {
+                if (!this.audioEnabled || !this.currentGenome || !this.isPlaying) return;
+                
+                const traits = this.currentGenome.musicalTraits;
+                const currentTime = (Date.now() - this.startTime) / 1000; // Convert to seconds
+                
+                // Schedule events for the newly enabled layer, starting from current time
+                switch (layerName) {
+                    case 'melody':
+                        for (let i = 0; i < 64; i++) {
+                            const time = i * 0.5;
+                            if (time > currentTime) { // Only schedule future events
+                                const note = this.generateNote(traits, i);
+                                if (note) {
+                                    const eventId = Tone.Transport.schedule((time) => {
+                                        if (this.isPlaying && this.layers.melody) {
+                                            this.melodySynth.triggerAttackRelease(note, '8n', time);
+                                        }
+                                    }, time);
+                                    this.scheduledEvents.melody.push(eventId);
+                                }
+                            }
+                        }
+                        break;
+                        
+                    case 'bass':
+                        for (let i = 0; i < 16; i++) {
+                            const time = i * 1.0;
+                            if (time > currentTime) {
+                                const bassNote = this.generateBassNote(traits, i);
+                                if (bassNote) {
+                                    const eventId = Tone.Transport.schedule((time) => {
+                                        if (this.isPlaying && this.layers.bass) {
+                                            this.bassSynth.triggerAttackRelease(bassNote, '4n', time);
+                                        }
+                                    }, time);
+                                    this.scheduledEvents.bass.push(eventId);
+                                }
+                            }
+                        }
+                        break;
+                        
+                    case 'chords':
+                        for (let i = 0; i < 8; i++) {
+                            const time = i * 2.0;
+                            if (time > currentTime) {
+                                const chord = this.generateChord(traits, i);
+                                if (chord && chord.length > 0) {
+                                    const eventId = Tone.Transport.schedule((time) => {
+                                        if (this.isPlaying && this.layers.chords) {
+                                            this.chordSynth.triggerAttackRelease(chord, '2n', time);
+                                        }
+                                    }, time);
+                                    this.scheduledEvents.chords.push(eventId);
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            
+            stopLayerAudio(layerName) {
+                // Immediately stop audio for the specified layer
+                switch (layerName) {
+                    case 'melody':
+                        if (this.melodySynth) {
+                            this.melodySynth.releaseAll();
+                        }
+                        break;
+                    case 'bass':
+                        if (this.bassSynth) {
+                            this.bassSynth.triggerRelease();
+                        }
+                        break;
+                    case 'chords':
+                        if (this.chordSynth) {
+                            this.chordSynth.releaseAll();
+                        }
+                        break;
+                }
+                
+                // Cancel scheduled events for this layer
+                this.clearScheduledEvents(layerName);
+            }
+
+            
+            updateLayerIndicator() {
+                const activeLayersList = [];
+                if (this.layers.melody) activeLayersList.push('Melody');
+                if (this.layers.bass) activeLayersList.push('Bass');
+                if (this.layers.chords) activeLayersList.push('Chords');
+                
+                const indicator = document.getElementById('layerIndicator');
+                if (indicator) {
+                    indicator.textContent = activeLayersList.join(' • ') || 'No layers active';
+                }
+            }
+            
+            startEvolution() {
+                this.isRunning = true;
+                this.dom.startBtn.textContent = 'Running...';
+                this.dom.startBtn.disabled = true;
+                this.evolutionStartTime = Date.now();
+                
+                // Start evolution progress animation
+                this.updateEvolutionProgress();
+                
+                this.showNotification('🧬 Evolution started!');
+            }
+            
+            updateEvolutionProgress() {
+                if (!this.isRunning) return;
+                
+                // Calculate progress based on generation and fitness
+                const maxGenerations = 100; // Target generations
+                const generationProgress = Math.min(this.generation / maxGenerations, 1);
+                const fitnessProgress = this.currentGenome ? this.currentGenome.fitness : 0;
+                
+                // Combine generation and fitness progress
+                const overallProgress = (generationProgress * 0.7) + (fitnessProgress * 0.3);
+                
+                // Update progress bar
+                if (this.dom.evolutionProgress) {
+                    this.dom.evolutionProgress.style.width = `${overallProgress * 100}%`;
+                }
+                
+                // Continue animation if evolution is running
+                if (this.isRunning) {
+                    setTimeout(() => this.updateEvolutionProgress(), 1000);
+                }
+            }
+            
+            pauseEvolution() {
+                this.isRunning = false;
+                this.dom.startBtn.textContent = 'Start';
+                this.dom.startBtn.disabled = false;
+                
+                // Stop progress animation
+                if (this.dom.evolutionProgress) {
+                    this.dom.evolutionProgress.style.width = '0%';
+                }
+                
+                this.showNotification('⏸️ Evolution paused');
+            }
+            
+            resetEvolution() {
+                this.isRunning = false;
+                this.generation = 0;
+                this.initializePopulation();
+                this.updateUI();
+                this.dom.startBtn.textContent = 'Start';
+                this.dom.startBtn.disabled = false;
+                
+                // Reset progress bar
+                if (this.dom.evolutionProgress) {
+                    this.dom.evolutionProgress.style.width = '0%';
+                }
+                
+                // Reset fitness function to default
+                this.fitnessFunction = 'harmony';
+                document.getElementById('harmonyBtn').classList.add('active');
+                document.getElementById('rhythmBtn').classList.remove('active');
+                document.getElementById('catchinessBtn').classList.remove('active');
+                
+                this.showNotification('🔄 Evolution reset to defaults');
+            }
+            
+            togglePlayback() {
+                if (this.isPlaying) {
+                    this.stopPlayback();
+                } else {
+                    this.startPlayback();
+                }
+            }
+            
+            startPlayback() {
+                if (!this.audioEnabled || !this.currentGenome) return;
+                
+                this.isPlaying = true;
+                this.dom.playButton.textContent = '⏸️';
+                this.startTime = Date.now();
+                this.duration = 32000; // 32 seconds - much longer!
+                
+                // Clear any existing scheduled events
+                this.clearScheduledEvents();
+                
+                // Reset scheduled events arrays
+                this.scheduledEvents = {
+                    melody: [],
+                    bass: [],
+                    chords: []
+                };
+                this.playbackTimeout = null;
+                
+                // Simple melody generation based on current genome
+                this.generateAndPlayMusic();
+                
+                // Stop after duration
+                this.playbackTimeout = setTimeout(() => {
+                    this.stopPlayback();
+                }, this.duration);
+            }
+            
+            stopPlayback() {
+                this.isPlaying = false;
+                this.dom.playButton.textContent = '▶️';
+                
+                // Clear the timeout if it exists
+                if (this.playbackTimeout) {
+                    clearTimeout(this.playbackTimeout);
+                    this.playbackTimeout = null;
+                }
+                
+                // Stop all audio and clear scheduled events
+                if (this.audioEnabled) {
+                    this.melodySynth?.releaseAll();
+                    this.bassSynth?.triggerRelease();
+                    this.chordSynth?.releaseAll();
+                    
+                    // Cancel all scheduled events
+                    this.clearScheduledEvents();
+                }
+                
+                // Reset timeline display
+                this.updateTimelineDisplay();
+            }
+            
+            updateTimelineDisplay() {
+                if (!this.isPlaying) {
+                    // Reset to start position when not playing
+                    if (this.dom.timelineProgress) {
+                        this.dom.timelineProgress.style.width = '0%';
+                    }
+                    if (this.dom.timeDisplay) {
+                        this.dom.timeDisplay.textContent = '0:00 / 0:32';
+                    }
+                    return;
+                }
+                
+                const currentTime = Date.now() - this.startTime;
+                const progress = Math.min(currentTime / this.duration, 1) * 100;
+                
+                // Update progress bar
+                if (this.dom.timelineProgress) {
+                    this.dom.timelineProgress.style.width = `${progress}%`;
+                }
+                
+                // Update time display
+                if (this.dom.timeDisplay) {
+                    const currentSeconds = Math.floor(currentTime / 1000);
+                    const totalSeconds = Math.floor(this.duration / 1000);
+                    const currentFormatted = this.formatTime(currentSeconds);
+                    const totalFormatted = this.formatTime(totalSeconds);
+                    this.dom.timeDisplay.textContent = `${currentFormatted} / ${totalFormatted}`;
+                }
+            }
+            
+            formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
+            
+            clearScheduledEvents(layerName = null) {
+                // Cancel scheduled Tone.js events for a specific layer or all layers
+                if (layerName) {
+                    // Cancel events for specific layer
+                    if (this.scheduledEvents[layerName] && this.scheduledEvents[layerName].length > 0) {
+                        this.scheduledEvents[layerName].forEach(eventId => {
+                            try {
+                                Tone.Transport.cancel(eventId);
+                            } catch (e) {
+                                // Event might already be played or cancelled
+                            }
+                        });
+                        this.scheduledEvents[layerName] = [];
+                    }
+                } else {
+                    // Cancel all events
+                    Object.keys(this.scheduledEvents).forEach(layer => {
+                        if (this.scheduledEvents[layer] && this.scheduledEvents[layer].length > 0) {
+                            this.scheduledEvents[layer].forEach(eventId => {
+                                try {
+                                    Tone.Transport.cancel(eventId);
+                                } catch (e) {
+                                    // Event might already be played or cancelled
+                                }
+                            });
+                            this.scheduledEvents[layer] = [];
+                        }
+                    });
+                    
+                    // Stop and clear the transport
+                    if (Tone.Transport.state === 'started') {
+                        Tone.Transport.stop();
+                    }
+                    Tone.Transport.cancel(0); // Cancel all events from time 0
+                }
+            }
+            
+            generateAndPlayMusic() {
+                if (!this.audioEnabled || !this.currentGenome) return;
+                
+                const traits = this.currentGenome.musicalTraits;
+                
+                // Use Transport for better timing control
+                Tone.Transport.bpm.value = traits.tempo || 120;
+                
+                // Schedule melody notes
+                if (this.layers.melody) {
+                    for (let i = 0; i < 64; i++) {
+                        const time = i * 0.5; // Every half second
+                        const note = this.generateNote(traits, i);
+                        if (note) {
+                            const eventId = Tone.Transport.schedule((time) => {
+                                if (this.isPlaying && this.layers.melody) { // Check layer status at play time
+                                    this.melodySynth.triggerAttackRelease(note, '8n', time);
+                                }
+                            }, time);
+                            this.scheduledEvents.melody.push(eventId);
+                        }
+                    }
+                }
+                
+                // Schedule bass notes (simpler pattern)
+                if (this.layers.bass) {
+                    for (let i = 0; i < 16; i++) {
+                        const time = i * 4.0; // Every 4 seconds (chords)
+                        const bassNote = this.generateBassNote(traits, i);
+                        if (bassNote) {
+                            const eventId = Tone.Transport.schedule((time) => {
+                                if (this.isPlaying && this.layers.bass) { // Check layer status at play time
+                                    this.bassSynth.triggerAttackRelease(bassNote, '4n', time);
+                                }
+                            }, time);
+                            this.scheduledEvents.bass.push(eventId);
+                        }
+                    }
+                }
+                
+                // Schedule chord progression
+                if (this.layers.chords) {
+                    for (let i = 0; i < 8; i++) {
+                        const time = i * 4.0; // Every 4 seconds (chords)
+                        const chord = this.generateChord(traits, i);
+                        if (chord && chord.length > 0) {
+                            const eventId = Tone.Transport.schedule((time) => {
+                                if (this.isPlaying && this.layers.chords) { // Check layer status at play time
+                                    this.chordSynth.triggerAttackRelease(chord, '2n', time);
+                                }
+                            }, time);
+                            this.scheduledEvents.chords.push(eventId);
+                        }
+                    }
+                }
+                
+                // Start the transport
+                Tone.Transport.start();
+            }
+            
+            generateNote(traits, index) {
+                const scales = {
+                    major: [0, 2, 4, 5, 7, 9, 11],
+                    minor: [0, 2, 3, 5, 7, 8, 10],
+                    pentatonic: [0, 2, 4, 7, 9],
+                    dorian: [0, 2, 3, 5, 7, 9, 10],
+                    mixolydian: [0, 2, 4, 5, 7, 9, 10],
+                    blues: [0, 3, 5, 6, 7, 10],
+                    harmonic_minor: [0, 2, 3, 5, 7, 8, 11]
+                };
+                
+                const scale = scales[traits.scaleType] || scales.major;
+                const rootNote = traits.rootNote || 0;
+                const noteIndex = Math.floor(Math.random() * scale.length);
+                const octave = 4 + Math.floor(Math.random() * 2);
+                const semitone = rootNote + scale[noteIndex];
+                
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                return noteNames[semitone % 12] + octave;
+            }
+            
+            generateBassNote(traits, index) {
+                const progression = traits.chordProgression || [0, 3, 4, 0];
+                const chordIndex = index % progression.length;
+                const chordRoot = progression[chordIndex];
+                
+                const rootNote = traits.rootNote || 0;
+                const bassNote = (rootNote + chordRoot) % 12;
+                const octave = 2; // Bass octave
+                
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                return noteNames[bassNote] + octave;
+            }
+            
+            generateChord(traits, index) {
+                const progression = traits.chordProgression || [0, 3, 4, 0];
+                const chordIndex = index % progression.length;
+                const chordRoot = progression[chordIndex];
+                
+                const rootNote = traits.rootNote || 0;
+                const baseNote = (rootNote + chordRoot) % 12;
+                const octave = 3; // Chord octave
+                
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                
+                // Generate a triad (root, third, fifth)
+                const chord = [
+                    noteNames[baseNote] + octave,
+                    noteNames[(baseNote + 4) % 12] + octave, // Major third
+                    noteNames[(baseNote + 7) % 12] + octave  // Perfect fifth
+                ];
+                
+                return chord;
+            }
+            
+            rateCurrentGenome(rating) {
+                if (!this.currentGenome) return;
+                
+                if (rating === 'like') {
+                    this.currentGenome.fitness += 0.1;
+                    this.showNotification('👍 Genome liked! Fitness increased');
+                } else {
+                    this.currentGenome.fitness -= 0.05;
+                    this.showNotification('👎 Genome skipped! Trying new variation');
+                    this.selectBestGenome();
+                }
+                
+                this.updateUI();
+            }
+            
+            evolvePopulation() {
+                this.generation++;
+                // Simple evolution: create new population based on current best
+                const elite = this.population.slice(0, 5); // Keep top 5
+                const newPopulation = [...elite];
+                
+                // Generate new genomes with mutations
+                while (newPopulation.length < 20) {
+                    const parent = elite[Math.floor(Math.random() * elite.length)];
+                    const child = this.mutateGenome(parent);
+                    newPopulation.push(child);
+                }
+                
+                this.population = newPopulation;
+                this.selectBestGenome();
+                this.updateUI();
+                this.showNotification(`⚡ Generation ${this.generation} evolved!`);
+            }
+            
+            mutateGenome(parent) {
+                const child = JSON.parse(JSON.stringify(parent));
+                const mutationRate = parseFloat(document.getElementById('mutationRate').value) || 0.1;
+                
+                Object.keys(child.musicalTraits).forEach(key => {
+                    if (Math.random() < mutationRate) {
+                        if (typeof child.musicalTraits[key] === 'number') {
+                            child.musicalTraits[key] += (Math.random() - 0.5) * 0.2;
+                            child.musicalTraits[key] = Math.max(0, Math.min(1, child.musicalTraits[key]));
+                        }
+                    }
+                });
+                
+                child.fitness = 0;
+                child.age = 0;
+                return child;
+            }
+            
+            saveCurrentGenome() {
+                const name = document.getElementById('genomeName').value.trim();
+                if (!name) {
+                    this.showNotification('Please enter a name for the genome', 'warning');
+                    return;
+                }
+                
+                if (!this.currentGenome) {
+                    this.showNotification('No genome to save', 'warning');
+                    return;
+                }
+                
+                const savedGenome = {
+                    name: name,
+                    genome: JSON.parse(JSON.stringify(this.currentGenome)),
+                    generation: this.generation,
+                    timestamp: Date.now()
+                };
+                
+                this.savedGenomes.push(savedGenome);
+                this.persistSavedGenomes();
+                this.renderSavedGenomes();
+                
+                document.getElementById('genomeName').value = '';
+                this.showNotification(`💾 Genome "${name}" saved!`);
+            }
+            
+            loadGenome(index) {
+                if (index >= 0 && index < this.savedGenomes.length) {
+                    this.currentGenome = JSON.parse(JSON.stringify(this.savedGenomes[index].genome));
+                    this.updateGenomeDisplay();
+                    this.updateUI();
+                    this.showNotification(`📚 Loaded genome "${this.savedGenomes[index].name}"`);
+                }
+            }
+            
+            deleteGenome(index) {
+                if (index >= 0 && index < this.savedGenomes.length) {
+                    const name = this.savedGenomes[index].name;
+                    this.savedGenomes.splice(index, 1);
+                    this.persistSavedGenomes();
+                    this.renderSavedGenomes();
+                    this.showNotification(`🗑️ Deleted genome "${name}"`);
+                }
             }
             
             updateUI() {
@@ -1094,7 +2072,7 @@
                 const container = document.getElementById('savedGenomesList');
                 
                 if (this.savedGenomes.length === 0) {
-                    container.innerHTML = '<p style="opacity: 0.5; text-align: center;">No saved genomes yet</p>';
+                    container.innerHTML = '<p class="empty-state">No saved genomes yet</p>';
                     return;
                 }
                 
@@ -1110,6 +2088,441 @@
                         </div>
                     `;
                 }).join('');
+            }
+            
+            clearScheduledEvents(layerName = null) {
+                // Cancel scheduled Tone.js events for a specific layer or all layers
+                if (layerName) {
+                    // Cancel events for specific layer
+                    if (this.scheduledEvents[layerName] && this.scheduledEvents[layerName].length > 0) {
+                        this.scheduledEvents[layerName].forEach(eventId => {
+                            try {
+                                Tone.Transport.cancel(eventId);
+                            } catch (e) {
+                                // Event might already be played or cancelled
+                            }
+                        });
+                        this.scheduledEvents[layerName] = [];
+                    }
+                } else {
+                    // Cancel all events
+                    Object.keys(this.scheduledEvents).forEach(layer => {
+                        if (this.scheduledEvents[layer] && this.scheduledEvents[layer].length > 0) {
+                            this.scheduledEvents[layer].forEach(eventId => {
+                                try {
+                                    Tone.Transport.cancel(eventId);
+                                } catch (e) {
+                                    // Event might already be played or cancelled
+                                }
+                            });
+                            this.scheduledEvents[layer] = [];
+                        }
+                    });
+                    
+                    // Stop and clear the transport
+                    if (Tone.Transport.state === 'started') {
+                        Tone.Transport.stop();
+                    }
+                    Tone.Transport.cancel(0); // Cancel all events from time 0
+                }
+            }
+            
+            stopPlayback() {
+                this.isPlaying = false;
+                this.dom.playButton.textContent = '▶️';
+                
+                // Clear the timeout if it exists
+                if (this.playbackTimeout) {
+                    clearTimeout(this.playbackTimeout);
+                    this.playbackTimeout = null;
+                }
+                
+                // Stop all audio and clear scheduled events
+                if (this.audioEnabled) {
+                    this.melodySynth?.releaseAll();
+                    this.bassSynth?.triggerRelease();
+                    this.chordSynth?.releaseAll();
+                    
+                    // Cancel all scheduled events
+                    this.clearScheduledEvents();
+                }
+            }
+            
+            generateAndPlayMusic() {
+                if (!this.audioEnabled || !this.currentGenome) return;
+                
+                const traits = this.currentGenome.musicalTraits;
+                
+                // Use Transport for better timing control
+                Tone.Transport.bpm.value = traits.tempo || 120;
+                
+                // Schedule melody notes
+                if (this.layers.melody) {
+                    for (let i = 0; i < 64; i++) {
+                        const time = i * 0.5; // Every half second
+                        const note = this.generateNote(traits, i);
+                        if (note) {
+                            const eventId = Tone.Transport.schedule((time) => {
+                                if (this.isPlaying && this.layers.melody) { // Check layer status at play time
+                                    this.melodySynth.triggerAttackRelease(note, '8n', time);
+                                }
+                            }, time);
+                            this.scheduledEvents.melody.push(eventId);
+                        }
+                    }
+                }
+                
+                // Schedule bass notes (simpler pattern)
+                if (this.layers.bass) {
+                    for (let i = 0; i < 16; i++) {
+                        const time = i * 4.0; // Every 4 seconds (chords)
+                        const bassNote = this.generateBassNote(traits, i);
+                        if (bassNote) {
+                            const eventId = Tone.Transport.schedule((time) => {
+                                if (this.isPlaying && this.layers.bass) { // Check layer status at play time
+                                    this.bassSynth.triggerAttackRelease(bassNote, '4n', time);
+                                }
+                            }, time);
+                            this.scheduledEvents.bass.push(eventId);
+                        }
+                    }
+                }
+                
+                // Schedule chord progression
+                if (this.layers.chords) {
+                    for (let i = 0; i < 8; i++) {
+                        const time = i * 4.0; // Every 4 seconds (chords)
+                        const chord = this.generateChord(traits, i);
+                        if (chord && chord.length > 0) {
+                            const eventId = Tone.Transport.schedule((time) => {
+                                if (this.isPlaying && this.layers.chords) { // Check layer status at play time
+                                    this.chordSynth.triggerAttackRelease(chord, '2n', time);
+                                }
+                            }, time);
+                            this.scheduledEvents.chords.push(eventId);
+                        }
+                    }
+                }
+                
+                // Start the transport
+                Tone.Transport.start();
+                
+                // Stop after duration
+                this.playbackTimeout = setTimeout(() => {
+                    this.stopPlayback();
+                }, this.duration);
+            }
+            
+            generateNote(traits, index) {
+                const scales = {
+                    major: [0, 2, 4, 5, 7, 9, 11],
+                    minor: [0, 2, 3, 5, 7, 8, 10],
+                    pentatonic: [0, 2, 4, 7, 9],
+                    dorian: [0, 2, 3, 5, 7, 9, 10],
+                    mixolydian: [0, 2, 4, 5, 7, 9, 10],
+                    blues: [0, 3, 5, 6, 7, 10],
+                    harmonic_minor: [0, 2, 3, 5, 7, 8, 11]
+                };
+                
+                const scale = scales[traits.scaleType] || scales.major;
+                const rootNote = traits.rootNote || 0;
+                const noteIndex = Math.floor(Math.random() * scale.length);
+                const octave = 4 + Math.floor(Math.random() * 2);
+                const semitone = rootNote + scale[noteIndex];
+                
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                return noteNames[semitone % 12] + octave;
+            }
+            
+            generateBassNote(traits, index) {
+                const progression = traits.chordProgression || [0, 3, 4, 0];
+                const chordIndex = index % progression.length;
+                const chordRoot = progression[chordIndex];
+                
+                const rootNote = traits.rootNote || 0;
+                const bassNote = (rootNote + chordRoot) % 12;
+                const octave = 2; // Bass octave
+                
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                return noteNames[bassNote] + octave;
+            }
+            
+            generateChord(traits, index) {
+                const progression = traits.chordProgression || [0, 3, 4, 0];
+                const chordIndex = index % progression.length;
+                const chordRoot = progression[chordIndex];
+                
+                const rootNote = traits.rootNote || 0;
+                const baseNote = (rootNote + chordRoot) % 12;
+                const octave = 3; // Chord octave
+                
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                
+                // Generate a triad (root, third, fifth)
+                const chord = [
+                    noteNames[baseNote] + octave,
+                    noteNames[(baseNote + 4) % 12] + octave, // Major third
+                    noteNames[(baseNote + 7) % 12] + octave  // Perfect fifth
+                ];
+                
+                return chord;
+            }
+            
+            rateCurrentGenome(rating) {
+                if (!this.currentGenome) return;
+                
+                if (rating === 'like') {
+                    this.currentGenome.fitness += 0.1;
+                    this.showNotification('👍 Genome liked! Fitness increased');
+                } else {
+                    this.currentGenome.fitness -= 0.05;
+                    this.showNotification('👎 Genome skipped! Trying new variation');
+                    this.selectBestGenome();
+                }
+                
+                this.updateUI();
+            }
+            
+            evolvePopulation() {
+                this.generation++;
+                // Simple evolution: create new population based on current best
+                const elite = this.population.slice(0, 5); // Keep top 5
+                const newPopulation = [...elite];
+                
+                // Generate new genomes with mutations
+                while (newPopulation.length < 20) {
+                    const parent = elite[Math.floor(Math.random() * elite.length)];
+                    const child = this.mutateGenome(parent);
+                    newPopulation.push(child);
+                }
+                
+                this.population = newPopulation;
+                this.selectBestGenome();
+                this.updateUI();
+                this.showNotification(`⚡ Generation ${this.generation} evolved!`);
+            }
+            
+            mutateGenome(parent) {
+                const child = JSON.parse(JSON.stringify(parent));
+                const mutationRate = parseFloat(document.getElementById('mutationRate').value) || 0.1;
+                
+                Object.keys(child.musicalTraits).forEach(key => {
+                    if (Math.random() < mutationRate) {
+                        if (typeof child.musicalTraits[key] === 'number') {
+                            child.musicalTraits[key] += (Math.random() - 0.5) * 0.2;
+                            child.musicalTraits[key] = Math.max(0, Math.min(1, child.musicalTraits[key]));
+                        }
+                    }
+                });
+                
+                child.fitness = 0;
+                child.age = 0;
+                return child;
+            }
+            
+            saveCurrentGenome() {
+                const name = document.getElementById('genomeName').value.trim();
+                if (!name) {
+                    this.showNotification('Please enter a name for the genome', 'warning');
+                    return;
+                }
+                
+                if (!this.currentGenome) {
+                    this.showNotification('No genome to save', 'warning');
+                    return;
+                }
+                
+                const savedGenome = {
+                    name: name,
+                    genome: JSON.parse(JSON.stringify(this.currentGenome)),
+                    generation: this.generation,
+                    timestamp: Date.now()
+                };
+                
+                this.savedGenomes.push(savedGenome);
+                this.persistSavedGenomes();
+                this.renderSavedGenomes();
+                
+                document.getElementById('genomeName').value = '';
+                this.showNotification(`💾 Genome "${name}" saved!`);
+            }
+            
+            loadGenome(index) {
+                if (index >= 0 && index < this.savedGenomes.length) {
+                    this.currentGenome = JSON.parse(JSON.stringify(this.savedGenomes[index].genome));
+                    this.updateGenomeDisplay();
+                    this.updateUI();
+                    this.showNotification(`📚 Loaded genome "${this.savedGenomes[index].name}"`);
+                }
+            }
+            
+            deleteGenome(index) {
+                if (index >= 0 && index < this.savedGenomes.length) {
+                    const name = this.savedGenomes[index].name;
+                    this.savedGenomes.splice(index, 1);
+                    this.persistSavedGenomes();
+                    this.renderSavedGenomes();
+                    this.showNotification(`🗑️ Deleted genome "${name}"`);
+                }
+            }
+            
+            exportCurrentGenomeAsMIDI() {
+                try {
+                    if (!this.currentGenome || !this.currentGenome.musicalTraits) {
+                        this.showNotification("⚠️ No genome to export!");
+                        return;
+                    }
+                    
+                    // Generate notes from the genome's musical traits
+                    const generatedNotes = this.generateNotesFromGenome(this.currentGenome);
+                    
+                    // Generate MIDI-like data (simplified format)
+                    const midiData = this.generateMIDIData(this.currentGenome, generatedNotes);
+                    const jsonString = JSON.stringify(midiData, null, 2);
+                    
+                    // Create download link
+                    const blob = new Blob([jsonString], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `melodyforge-midi-${Date.now()}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    this.showNotification("🎵 MIDI data exported successfully!");
+                } catch (error) {
+                    console.error('MIDI export error:', error);
+                    this.showNotification("❌ MIDI export failed!");
+                }
+            }
+            
+            generateNotesFromGenome(genome) {
+                const traits = genome.musicalTraits;
+                const notes = [];
+                
+                // Generate 64 melody notes (32 seconds at 120 BPM with 8th notes)
+                for (let i = 0; i < 64; i++) {
+                    const note = this.generateNote(traits, i);
+                    if (note) {
+                        // Convert note name to MIDI pitch number
+                        const pitch = this.convertNoteToPitch(note);
+                        notes.push({
+                            pitch: pitch,
+                            duration: 0.5, // 8th note duration in seconds
+                            velocity: 0.7 + (Math.random() * 0.3), // Vary velocity slightly
+                            time: i * 0.5, // Each note starts 0.5 seconds apart
+                            noteName: note
+                        });
+                    }
+                }
+                
+                // Add bass notes (8 notes, 2-second duration each)
+                for (let i = 0; i < 8; i++) {
+                    const bassNote = this.generateBassNote(traits, i);
+                    if (bassNote) {
+                        const pitch = this.convertNoteToPitch(bassNote);
+                        notes.push({
+                            pitch: pitch - 24, // Bass octave (two octaves down)
+                            duration: 2.0, // Whole note duration
+                            velocity: 0.6,
+                            time: i * 2.0,
+                            noteName: bassNote,
+                            track: 'bass'
+                        });
+                    }
+                }
+                
+                // Add chord notes (8 chord progressions, 4-second duration each)
+                for (let i = 0; i < 8; i++) {
+                    const chord = this.generateChord(traits, i);
+                    if (chord && chord.length > 0) {
+                        chord.forEach((chordNote, chordIndex) => {
+                            const pitch = this.convertNoteToPitch(chordNote);
+                            notes.push({
+                                pitch: pitch,
+                                duration: 4.0, // Chord duration (4 seconds)
+                                velocity: 0.5,
+                                time: i * 4.0,
+                                noteName: chordNote,
+                                track: 'chords'
+                            });
+                        });
+                    }
+                }
+                
+                return notes.sort((a, b) => a.time - b.time); // Sort by time
+            }
+            
+            convertNoteToPitch(noteName) {
+                // Convert Tone.js note format (e.g., "C4", "F#3") to MIDI pitch number
+                if (!noteName || typeof noteName !== 'string') return 60; // Default to C4
+                
+                const noteMap = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
+                
+                // Extract note and octave (e.g., "C4" -> note="C", octave=4)
+                const matches = noteName.match(/([A-G]#?)(\d+)/);
+                if (!matches) return 60; // Default to C4 if parsing fails
+                
+                const note = matches[1];
+                const octave = parseInt(matches[2]);
+                
+                // MIDI note number = (octave + 1) * 12 + noteValue
+                // C4 = 60, so C-1 would be 0
+                return (octave + 1) * 12 + noteMap[note];
+            }
+            
+            generateMIDIData(genome, notes) {
+                const traits = genome.musicalTraits;
+                const tempo = traits.tempo || 120;
+                const scaleNames = ['major', 'minor', 'dorian', 'mixolydian', 'pentatonic', 'blues', 'harmonic_minor'];
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                
+                const scaleName = scaleNames[scaleNames.indexOf(traits.scaleType)] || traits.scaleType;
+                const rootNote = noteNames[traits.rootNote] || 'C';
+                
+                return {
+                    format: "MelodyForge MIDI Export",
+                    tempo: Math.round(tempo),
+                    timeSignature: "4/4",
+                    key: rootNote,
+                    scale: scaleName,
+                    tracks: [{
+                        name: "MelodyForge Track",
+                        instrument: "piano",
+                        notes: notes.map((note, index) => ({
+                            pitch: note.pitch,
+                            duration: note.duration,
+                            velocity: note.velocity || 0.7,
+                            time: note.time,
+                            octave: Math.floor(note.pitch / 12) - 1,
+                            noteName: this.getNoteNameFromPitch(note.pitch),
+                            track: note.track || 'melody'
+                        }))
+                    }],
+                    musicalTraits: {
+                        scaleType: traits.scaleType,
+                        rootNote: traits.rootNote,
+                        tempo: traits.tempo,
+                        melodyShape: traits.melodyShape,
+                        harmonyComplexity: traits.harmonyComplexity,
+                        rhythmDensity: traits.rhythmDensity
+                    },
+                    metadata: {
+                        generation: this.generation,
+                        fitness: genome.fitness || 0,
+                        exportTime: new Date().toISOString(),
+                        genomeId: genome.id || `genome-${Date.now()}`,
+                        totalNotes: notes.length,
+                        duration: Math.max(...notes.map(n => n.time + n.duration))
+                    }
+                };
+            }
+            
+            getNoteNameFromPitch(pitch) {
+                const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                return noteNames[Math.round(pitch) % 12];
             }
         }
 
